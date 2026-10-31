@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import gsap from 'gsap'
-import { skills } from '~/data/portfolio'
+import { skillGroups } from '~/data/portfolio'
 
 const root = ref<HTMLElement | null>(null)
 
@@ -37,14 +37,14 @@ useScrollAnimation(root, ({ reduced }) => {
         Ma <span class="text-gradient">boîte à outils</span>.
       </h2>
       <div class="flex flex-col gap-4">
-        <div v-for="(row, i) in skills" :key="i" data-marquee class="flex w-max gap-4 whitespace-nowrap">
+        <div v-for="group in skillGroups" :key="group.label" data-marquee class="flex w-max gap-4 whitespace-nowrap">
           <span
             v-for="n in 3"
             :key="n"
             class="contents"
           >
             <span
-              v-for="skill in row"
+              v-for="skill in group.items"
               :key="`${n}-${skill}`"
               class="rounded-full border border-white/15 bg-white/5 px-8 py-4 text-2xl font-medium backdrop-blur sm:text-4xl"
             >{{ skill }}</span>

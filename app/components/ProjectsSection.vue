@@ -58,8 +58,11 @@ useScrollAnimation(root, ({ reduced }) => {
           class="group flex h-[min(78svh,40rem)] w-[min(85vw,32rem)] shrink-0 flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03]"
         >
           <div class="relative h-[55%] shrink-0 overflow-hidden">
-            <div data-card-visual class="absolute -inset-x-[8%] inset-y-0 transition-transform duration-700 group-hover:scale-105">
-              <ProjectVisual :visual="project.visual" />
+            <!-- Parallaxe GSAP sur le conteneur, zoom au survol (transition CSS) sur l'enfant -->
+            <div data-card-visual class="absolute -inset-x-[8%] inset-y-0">
+              <div class="size-full transition-transform duration-700 group-hover:scale-105">
+                <ProjectVisual :visual="project.visual" />
+              </div>
             </div>
           </div>
           <div class="flex flex-1 flex-col p-7">

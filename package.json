@@ -7,7 +7,8 @@
     "build": "nuxt build",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "pdf": "nuxt generate && node scripts/generate-pdf.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",
@@ -16,6 +17,7 @@
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
+    "playwright": "1.63.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
     "vue-tsc": "^3.3.14"

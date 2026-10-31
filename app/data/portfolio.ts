@@ -43,9 +43,9 @@ export const experience: Experience[] = [
   },
   {
     period: '2023 — 2026',
-    title: "Diplôme d'ingénieur",
+    title: "Diplôme d'ingénieur informatique",
     place: 'ENSSAT, Lannion',
-    text: "Trois ans d'école d'ingénieurs en parallèle de l'alternance, entre théorie et terrain.",
+    text: "Une formation généraliste en informatique, menée en parallèle de l'alternance, avec une spécialisation en intelligence artificielle en dernière année.",
   },
   {
     period: 'Depuis sept. 2026',
@@ -56,10 +56,15 @@ export const experience: Experience[] = [
   },
 ]
 
-export const skills = [
-  ['Vue', 'Nuxt', 'TypeScript', 'Tailwind', 'Nuxt UI', 'GSAP', 'React', 'Next.js'],
-  ['Node.js', 'Express', 'PHP', 'PostgreSQL', 'Drizzle', 'Docker', 'Rust', 'Git', 'Gestion de projet'],
+// Un groupe par domaine (une rangée défilante chacun sur le site).
+export const skillGroups = [
+  { label: 'Web', items: ['Vue', 'Nuxt', 'TypeScript', 'JavaScript', 'Tailwind', 'Nuxt UI', 'GSAP', 'React'] },
+  { label: 'Back & outillage', items: ['Node.js', 'Express', 'PHP', 'PostgreSQL', 'Drizzle', 'Docker', 'Git', 'CI/CD'] },
+  { label: 'Fondamentaux', items: ['Python', 'C', 'Rust', 'Intelligence artificielle', 'Algorithmique', 'Gestion de projet'] },
 ]
+
+/** Fichier PDF récapitulatif, généré par `npm run pdf` depuis la page /recap. */
+export const recapPdf = '/romain-rodrigues-recap.pdf'
 
 export type ProjectVisual =
   | { kind: 'image', src: string, alt: string }

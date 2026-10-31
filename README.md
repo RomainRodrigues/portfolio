@@ -136,22 +136,20 @@ Tu peux suivre son avancement dans l'onglet **Actions** du dépôt, et le relanc
 ### Configuration initiale (une seule fois)
 
 1. **Activer GitHub Pages** : sur GitHub, va dans **Settings → Pages** et choisis **GitHub Actions** dans *Build and deployment → Source*.
-2. **Configurer le domaine** : chez ton registrar (là où tu as acheté `romrd.fr`), crée ces enregistrements DNS pour le domaine racine :
+2. **Configurer le DNS dans Cloudflare** : modifie les deux enregistrements existants pour qu'ils pointent vers GitHub.
 
-   | Type | Nom | Valeur |
-   |---|---|---|
-   | A | `@` | `185.199.108.153` |
-   | A | `@` | `185.199.109.153` |
-   | A | `@` | `185.199.110.153` |
-   | A | `@` | `185.199.111.153` |
-   | AAAA | `@` | `2606:50c0:8000::153` |
-   | AAAA | `@` | `2606:50c0:8001::153` |
-   | AAAA | `@` | `2606:50c0:8002::153` |
-   | AAAA | `@` | `2606:50c0:8003::153` |
+   | Type | Nom | Valeur | Proxy |
+   |---|---|---|---|
+   | CNAME | `romrd.fr` | `romainrodrigues.github.io` | DNS only (nuage gris) au début |
+   | CNAME | `www` | `romainrodrigues.github.io` | DNS only (nuage gris) au début |
 
-   Supprime les éventuels anciens enregistrements A ou AAAA de `@`. Ne touche pas aux sous-domaines existants (`claude.romrd.fr`, etc.).
-3. **Déclarer le domaine** : dans **Settings → Pages → Custom domain**, saisis `romrd.fr` et enregistre. Le fichier `public/CNAME` le déclare aussi à chaque déploiement.
-4. Une fois le DNS validé (de quelques minutes à quelques heures), coche **Enforce HTTPS**.
+   Cloudflare accepte un CNAME sur le domaine racine : c'est le *CNAME flattening*. Ces deux CNAME remplacent les enregistrements A actuels.
+   Ne touche pas aux autres sous-domaines (`bigdata`, `kohfrais`, `projetjs`…).
+3. **Déclarer le domaine** : dans **Settings → Pages → Custom domain**, saisis `romrd.fr` et enregistre. Le fichier `public/CNAME` le déclare aussi à chaque déploiement. GitHub redirigera automatiquement `www.romrd.fr` vers `romrd.fr`.
+4. **HTTPS** : une fois que GitHub affiche *DNS check successful* (de quelques minutes à quelques heures), attends que le certificat soit émis, puis coche **Enforce HTTPS**.
+5. **Facultatif, remettre le proxy Cloudflare** (nuage orange) sur les deux enregistrements, comme pour les autres sous-domaines. Dans ce cas, le mode SSL/TLS de Cloudflare doit être **Full** ou **Full (strict)**, jamais *Flexible* : ce mode provoque des boucles de redirection avec *Enforce HTTPS*.
+
+> Pourquoi le nuage gris au début ? Avec le proxy activé, GitHub ne voit que les IP de Cloudflare. Il ne peut alors ni vérifier le domaine ni émettre le certificat HTTPS.
 
 ### Changer d'adresse
 

@@ -5,6 +5,7 @@
       <HeroSection />
       <ManifestoSection />
       <ProcessSection />
+      <TimelineSection />
       <SkillsSection />
       <ProjectsSection />
       <ContactSection />

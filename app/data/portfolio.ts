@@ -1,33 +1,118 @@
-// Contenu provisoire : à remplacer par le vrai contenu.
 export const profile = {
   firstName: 'Romain',
   lastName: 'Rodrigues',
-  role: 'Développeur web',
-  tagline: 'Je conçois des interfaces rapides, soignées et vivantes.',
+  role: 'Concepteur-développeur',
+  tagline: "Je conçois et développe des applications web, de l'idée à la mise en production.",
   manifesto:
-    "Chaque interface raconte une histoire. Mon travail consiste à la rendre limpide, fluide et mémorable, du premier pixel jusqu'à la mise en production.",
+    "Développeur web avant tout, j'aime toucher à tout : le front, le back, l'infra et la gestion de projet. Ce qui me motive, c'est de transformer une idée en un produit concret, propre et agréable à utiliser.",
+  // TODO : remplacer par la vraie adresse
   email: 'contact@exemple.fr',
   socials: [
-    { label: 'GitHub', href: 'https://github.com/romainrodrigues' },
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/' },
+    { label: 'GitHub', href: 'https://github.com/RomainRodrigues' },
+    // TODO : ajouter LinkedIn
   ],
 }
 
 export const process = [
   { title: 'Concevoir.', text: "Comprendre le besoin, poser l'architecture, dessiner l'expérience." },
   { title: 'Développer.', text: 'Un code typé, testé et maintenable, avec Vue et Nuxt au cœur.' },
-  { title: 'Livrer.', text: 'Performance, accessibilité et déploiement continu. Sans compromis.' },
+  { title: 'Piloter.', text: "Cadrer, coordonner et livrer. Du ticket jusqu'à la mise en production." },
+]
+
+export interface Experience {
+  period: string
+  title: string
+  place: string
+  text: string
+  current?: boolean
+}
+
+// TODO : vérifier les années
+export const experience: Experience[] = [
+  {
+    period: '2021 — 2023',
+    title: 'BUT Informatique',
+    place: 'IUT de Lannion',
+    text: "Deux années pour poser des bases solides : algorithmique, bases de données, développement web.",
+  },
+  {
+    period: '2022 — 2026',
+    title: 'Alternance',
+    place: 'Cooperl',
+    text: "Quatre ans d'alternance en tant que développeur, sur des projets concrets, en équipe et en production.",
+  },
+  {
+    period: '2023 — 2026',
+    title: "Diplôme d'ingénieur",
+    place: 'ENSSAT, Lannion',
+    text: "Trois ans d'école d'ingénieurs en parallèle de l'alternance, entre théorie et terrain.",
+  },
+  {
+    period: 'Depuis sept. 2026',
+    title: 'Concepteur-développeur & chef de projet junior',
+    place: 'Cooperl — CDI',
+    text: 'Je conçois et développe des applications, et je pilote des projets de bout en bout.',
+    current: true,
+  },
 ]
 
 export const skills = [
-  ['Vue', 'Nuxt', 'TypeScript', 'JavaScript', 'Tailwind', 'GSAP'],
-  ['Node.js', 'API REST', 'SQL', 'Git', 'CI/CD', 'Docker'],
+  ['Vue', 'Nuxt', 'TypeScript', 'Tailwind', 'Nuxt UI', 'GSAP', 'React', 'Next.js'],
+  ['Node.js', 'Express', 'PHP', 'PostgreSQL', 'Drizzle', 'Docker', 'Git', 'Gestion de projet'],
 ]
 
-export const projects = [
-  { title: 'Projet Alpha', category: 'Application web', year: '2026', gradient: 'from-sky-500 to-indigo-700' },
-  { title: 'Projet Beta', category: 'E-commerce', year: '2025', gradient: 'from-fuchsia-500 to-purple-800' },
-  { title: 'Projet Gamma', category: 'Dashboard', year: '2025', gradient: 'from-amber-400 to-rose-600' },
-  { title: 'Projet Delta', category: 'Site vitrine', year: '2024', gradient: 'from-emerald-400 to-teal-700' },
-  { title: 'Projet Epsilon', category: 'Application mobile', year: '2024', gradient: 'from-slate-300 to-slate-700' },
+export type ProjectVisual =
+  | { kind: 'image', src: string, alt: string }
+  | { kind: 'chat' | 'terminal' | 'code' }
+
+export interface Project {
+  title: string
+  category: string
+  year: string
+  description: string
+  stack: string[]
+  github?: string
+  url?: string
+  visual: ProjectVisual
+}
+
+export const projects: Project[] = [
+  {
+    title: 'ChatLive',
+    category: 'Messagerie instantanée',
+    year: '2026',
+    description: 'Une messagerie en temps réel inspirée de Discord et Slack, avec serveurs, salons, authentification et mode sombre.',
+    stack: ['Nuxt 4', 'Nuxt UI', 'Drizzle', 'PostgreSQL'],
+    github: 'https://github.com/RomainRodrigues/ChatLive',
+    visual: { kind: 'chat' },
+  },
+  {
+    title: 'Claude Tips',
+    category: 'Documentation',
+    year: '2026',
+    description: 'Un guide pédagogique en français sur Claude Code, rédigé avec Claude Code lui-même grâce à plusieurs agents en parallèle.',
+    stack: ['Nuxt Content', 'Nuxt UI', 'Cloudflare'],
+    github: 'https://github.com/RomainRodrigues/claude-tips',
+    url: 'https://claude.romrd.fr',
+    visual: { kind: 'terminal' },
+  },
+  {
+    title: 'PHP CS Fixer Docker',
+    category: 'Extension VS Code',
+    year: '2026',
+    description: 'Formate le PHP avec PHP CS Fixer directement dans les conteneurs Docker, avec une seule configuration globale.',
+    stack: ['TypeScript', 'VS Code API', 'Docker'],
+    github: 'https://github.com/RomainRodrigues/php-cs-fixer-docker-ext',
+    visual: { kind: 'code' },
+  },
+  {
+    title: 'Surcharge Silencieuse',
+    category: 'Expérience interactive',
+    year: '2025',
+    description: "Une œuvre numérique sur la surproduction de données : l'écran se sature de blocs inutiles jusqu'à noyer l'essentiel.",
+    stack: ['Nuxt', 'Tailwind'],
+    github: 'https://github.com/RomainRodrigues/BigData',
+    url: 'https://bigdata.romrd.fr',
+    visual: { kind: 'image', src: '/projects/surcharge-silencieuse.webp', alt: "Capture de l'expérience : un écran saturé de blocs de données" },
+  },
 ]

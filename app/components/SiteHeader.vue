@@ -3,6 +3,7 @@ import { profile } from '~/data/portfolio'
 
 const links = [
   { label: 'À propos', target: '#about' },
+  { label: 'Parcours', target: '#parcours' },
   { label: 'Compétences', target: '#skills' },
   { label: 'Projets', target: '#projects' },
   { label: 'Contact', target: '#contact' },

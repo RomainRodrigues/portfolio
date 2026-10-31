@@ -9,7 +9,7 @@ useHead({
 })
 
 const contacts = computed(() => [
-  { label: c.value.identity.email, href: `mailto:${c.value.identity.email}` },
+  ...(c.value.identity.email ? [{ label: c.value.identity.email, href: `mailto:${c.value.identity.email}` }] : []),
   ...c.value.identity.socials.map(s => ({ label: s.href.replace(/^https?:\/\/(www\.)?/, ''), href: s.href })),
 ])
 </script>

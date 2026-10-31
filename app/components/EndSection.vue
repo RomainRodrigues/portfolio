@@ -45,7 +45,7 @@ useScrollAnimation(root, ({ reduced }) => {
     </div>
 
     <ul data-end-fade class="relative mt-10 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-ink/60">
-      <li><a :href="`mailto:${c.identity.email}`" class="transition-colors hover:text-ink">{{ c.identity.email }}</a></li>
+      <li v-if="c.identity.email"><a :href="`mailto:${c.identity.email}`" class="transition-colors hover:text-ink">{{ c.identity.email }}</a></li>
       <li v-for="social in c.identity.socials" :key="social.label">
         <a :href="social.href" target="_blank" rel="noopener" class="transition-colors hover:text-ink">{{ social.label }}</a>
       </li>

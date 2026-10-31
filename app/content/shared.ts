@@ -1,14 +1,17 @@
 // Contenu commun à toutes les langues (rien à traduire ici).
 import type { ProjectId } from './types'
 
-export const identity = {
+export const identity: {
+  firstName: string
+  lastName: string
+  /** Optionnel : si renseigné, il s'affiche en fin de page et dans le PDF. */
+  email?: string
+  socials: { label: string, href: string }[]
+} = {
   firstName: 'Romain',
   lastName: 'Rodrigues',
-  // TODO : remplacer par la vraie adresse
-  email: 'contact@exemple.fr',
   socials: [
     { label: 'GitHub', href: 'https://github.com/RomainRodrigues' },
-    // TODO : ajouter LinkedIn
   ],
 }
 

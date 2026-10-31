@@ -18,7 +18,6 @@ export default defineNuxtConfig({
   },
   i18n: {
     // URL publique du site, utilisée pour les liens SEO entre langues (hreflang).
-    // TODO : ajuster si le site n'est pas servi sur romrd.fr
     baseUrl: import.meta.env.NUXT_PUBLIC_SITE_URL || 'https://romrd.fr',
     // Français à la racine (/), anglais sous /en
     strategy: 'prefix_except_default',

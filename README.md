@@ -28,7 +28,7 @@ npm run dev        # http://localhost:3000 (anglais : http://localhost:3000/en)
 |---|---|
 | `npm run dev` | Serveur de développement avec rechargement automatique |
 | `npm run generate` | Construit le site statique dans `.output/public` |
-| `npm run pdf` | Construit le site **puis** régénère les deux PDF dans `public/` |
+| `npm run pdf` | Construit le site **puis** génère les deux PDF (fait automatiquement au déploiement) |
 | `npm run preview` | Sert le site construit, pour le tester comme en production |
 
 ---
@@ -58,55 +58,34 @@ Tout le contenu se trouve dans **`app/content/`**. Les composants ne contiennent
 
 ---
 
-## Mettre à jour le PDF récapitulatif
+## Le PDF récapitulatif
 
-### Pourquoi c'est nécessaire
+### Comment ça marche
 
-Le bouton « Télécharger le récap » propose un **fichier PDF déjà généré**, rangé dans `public/` :
+Le bouton « Télécharger le récap » propose un fichier PDF par langue :
 
-- `public/romain-rodrigues-recap-fr.pdf`
-- `public/romain-rodrigues-recap-en.pdf`
+- `romain-rodrigues-recap-fr.pdf`
+- `romain-rodrigues-recap-en.pdf`
 
-Ces fichiers ne se mettent **pas** à jour tout seuls. Quand tu modifies le contenu, le site change immédiatement, mais les PDF gardent l'ancienne version tant que tu ne les régénères pas.
+Ces fichiers **ne sont pas dans le dépôt**. Ils sont **générés automatiquement à chaque déploiement** (voir « Déploiement » plus bas), à partir des pages **`/recap`** (français) et **`/en/recap`** (anglais). Ces pages utilisent les mêmes fichiers `app/content/` que le site.
 
-### Comment ils sont fabriqués
+👉 **Tu n'as rien à faire.** Modifie le contenu, pousse sur `main` : le site **et** les PDF se mettent à jour ensemble.
 
-1. Le PDF est construit à partir des pages **`/recap`** (français) et **`/en/recap`** (anglais), au format A4. Elles utilisent les mêmes fichiers `app/content/` que le site : il n'y a rien à ressaisir.
-2. `npm run pdf` construit le site, ouvre ces deux pages dans un navigateur invisible (Playwright) et les « imprime » en PDF dans `public/`.
+### Voir le rendu du PDF en local
 
-Tu peux ouvrir http://localhost:3000/recap pendant `npm run dev` pour voir le rendu du PDF en direct.
+- **Le plus simple** : lance `npm run dev` et ouvre http://localhost:3000/recap ou http://localhost:3000/en/recap. C'est exactement ce qui sera imprimé dans le PDF.
+- **Pour générer les vrais fichiers PDF en local** (facultatif) :
+  ```bash
+  npx playwright install chromium   # une seule fois sur ta machine
+  npm run pdf
+  ```
+  Les fichiers sont créés dans `public/`. Ils sont ignorés par Git, tu ne peux donc pas les commiter par erreur.
 
-### La procédure, à chaque modification de contenu
+En `npm run dev`, le bouton de téléchargement renvoie une erreur 404 tant que tu n'as pas lancé `npm run pdf` au moins une fois. C'est normal.
 
-**Une seule fois sur ta machine**, installe le navigateur utilisé par Playwright :
+### Si le récap ne tient plus sur une page
 
-```bash
-npx playwright install chromium
-```
-
-**Ensuite, à chaque modification de contenu :**
-
-1. Modifie `app/content/fr.ts`, `en.ts` ou `shared.ts`.
-2. Vérifie le rendu avec `npm run dev`, sur le site et sur `/recap` et `/en/recap`.
-3. Régénère les PDF :
-   ```bash
-   npm run pdf
-   ```
-   Le terminal doit afficher :
-   ```
-   PDF généré : public/romain-rodrigues-recap-fr.pdf
-   PDF généré : public/romain-rodrigues-recap-en.pdf
-   ```
-4. Commite le contenu **et** les PDF ensemble :
-   ```bash
-   git add app/content public/*.pdf
-   git commit -m "Mise à jour du contenu"
-   git push
-   ```
-
-### Si le terminal affiche « contenu trop long, réduit à XX % »
-
-Le récap doit tenir sur **une seule page A4**. S'il déborde, le script le réduit automatiquement pour qu'il rentre, mais le texte devient plus petit. Au-delà d'environ 95 %, mieux vaut raccourcir des descriptions ou retirer un élément.
+Le récap doit tenir sur **une seule page A4**. S'il déborde, le script le réduit automatiquement et affiche « contenu trop long, réduit à XX % » (dans le terminal, ou dans les logs du déploiement sur GitHub). Au-delà d'environ 95 %, le texte devient trop petit : raccourcis des descriptions ou retire un élément.
 
 ---
 
@@ -141,4 +120,39 @@ Si l'utilisateur a activé « réduire les animations », les animations au scro
 
 ## Déploiement
 
-L'URL publique du site est définie dans `nuxt.config.ts` (`i18n.baseUrl`, `https://romrd.fr` par défaut). Elle sert aux liens SEO entre langues. Pour la changer sans toucher au code, définis la variable d'environnement `NUXT_PUBLIC_SITE_URL`.
+Le site est hébergé sur **GitHub Pages**, à l'adresse **https://romrd.fr**.
+
+### Ce qui se passe à chaque push sur `main`
+
+Le workflow `.github/workflows/deploy.yml` se lance automatiquement et :
+
+1. installe les dépendances et Chromium ;
+2. construit le site statique ;
+3. génère les deux PDF ;
+4. publie le tout sur GitHub Pages.
+
+Tu peux suivre son avancement dans l'onglet **Actions** du dépôt, et le relancer à la main avec le bouton **Run workflow**.
+
+### Configuration initiale (une seule fois)
+
+1. **Activer GitHub Pages** : sur GitHub, va dans **Settings → Pages** et choisis **GitHub Actions** dans *Build and deployment → Source*.
+2. **Configurer le domaine** : chez ton registrar (là où tu as acheté `romrd.fr`), crée ces enregistrements DNS pour le domaine racine :
+
+   | Type | Nom | Valeur |
+   |---|---|---|
+   | A | `@` | `185.199.108.153` |
+   | A | `@` | `185.199.109.153` |
+   | A | `@` | `185.199.110.153` |
+   | A | `@` | `185.199.111.153` |
+   | AAAA | `@` | `2606:50c0:8000::153` |
+   | AAAA | `@` | `2606:50c0:8001::153` |
+   | AAAA | `@` | `2606:50c0:8002::153` |
+   | AAAA | `@` | `2606:50c0:8003::153` |
+
+   Supprime les éventuels anciens enregistrements A ou AAAA de `@`. Ne touche pas aux sous-domaines existants (`claude.romrd.fr`, etc.).
+3. **Déclarer le domaine** : dans **Settings → Pages → Custom domain**, saisis `romrd.fr` et enregistre. Le fichier `public/CNAME` le déclare aussi à chaque déploiement.
+4. Une fois le DNS validé (de quelques minutes à quelques heures), coche **Enforce HTTPS**.
+
+### Changer d'adresse
+
+Si le site change de domaine, mets à jour `public/CNAME` et `i18n.baseUrl` dans `nuxt.config.ts`. Cette URL sert aux liens SEO entre langues ; elle peut aussi être définie par la variable d'environnement `NUXT_PUBLIC_SITE_URL` au moment du build.

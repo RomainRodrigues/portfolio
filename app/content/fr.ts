@@ -24,7 +24,6 @@ export default {
     label: 'Parcours',
     titleLine1: "Formé à l'école.",
     titleLine2: 'Forgé sur le terrain.',
-    // TODO : vérifier les années
     items: [
       {
         period: '2021 — 2023',

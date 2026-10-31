@@ -1,0 +1,55 @@
+name: Déploiement GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Permet aussi de lancer le déploiement à la main depuis l'onglet Actions
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement à la fois ; un nouveau push annule celui en attente
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Installer Chromium (pour générer les PDF)
+        run: npx playwright install --with-deps chromium
+
+      - name: Construire le site et générer les PDF
+        run: npm run pdf
+        env:
+          # Ajoute .nojekyll et la page 404 attendus par GitHub Pages
+          NITRO_PRESET: github_pages
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: .output/public
+          include-hidden-files: true
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

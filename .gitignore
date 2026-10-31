@@ -1,0 +1,15 @@
+node_modules
+.nuxt
+.output
+.data
+.nitro
+.cache
+dist
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+
+# PDF récapitulatifs : générés au déploiement (npm run pdf)
+public/*.pdf

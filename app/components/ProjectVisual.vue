@@ -2,6 +2,24 @@
 import type { ProjectVisual } from '~/data/portfolio'
 
 defineProps<{ visual: ProjectVisual }>()
+
+// Motif de QR code déterministe (21×21) : trois repères d'angle + modules pseudo-aléatoires.
+const QR_SIZE = 21
+const qrModules = Array.from({ length: QR_SIZE * QR_SIZE }, (_, i) => {
+  const x = i % QR_SIZE
+  const y = Math.floor(i / QR_SIZE)
+  const finder = (cx: number, cy: number) => {
+    const dx = x - cx
+    const dy = y - cy
+    if (dx < 0 || dy < 0 || dx > 6 || dy > 6) return null
+    const ring = Math.max(Math.abs(dx - 3), Math.abs(dy - 3))
+    return ring !== 2
+  }
+  const f = finder(0, 0) ?? finder(QR_SIZE - 7, 0) ?? finder(0, QR_SIZE - 7)
+  if (f !== null) return f
+  if ((x === 7 || y === 7 || x === QR_SIZE - 8 || y === QR_SIZE - 8) && (x < 8 || y < 8)) return false
+  return ((x * 7 + y * 13 + x * y * 3) % 5) < 2
+})
 </script>
 
 <template>
@@ -57,6 +75,22 @@ defineProps<{ visual: ProjectVisual }>()
     </div>
   </div>
 
+  <!-- Maquette : viseur de scan -->
+  <div v-else-if="visual.kind === 'scanner'" class="flex size-full items-center justify-center bg-gradient-to-br from-cyan-500/40 via-[#06202a] to-black" aria-hidden="true">
+    <div class="relative p-6">
+      <div class="grid size-40 gap-px sm:size-48" :style="{ gridTemplateColumns: `repeat(${QR_SIZE}, 1fr)` }">
+        <span v-for="(on, i) in qrModules" :key="i" :class="on ? 'bg-ink' : ''" />
+      </div>
+      <!-- Coins du viseur -->
+      <span class="absolute left-0 top-0 size-8 rounded-tl-xl border-l-4 border-t-4 border-cyan-300" />
+      <span class="absolute right-0 top-0 size-8 rounded-tr-xl border-r-4 border-t-4 border-cyan-300" />
+      <span class="absolute bottom-0 left-0 size-8 rounded-bl-xl border-b-4 border-l-4 border-cyan-300" />
+      <span class="absolute bottom-0 right-0 size-8 rounded-br-xl border-b-4 border-r-4 border-cyan-300" />
+      <span class="scan-laser absolute inset-x-3 top-6 h-0.5 rounded-full bg-cyan-300 shadow-[0_0_16px_4px_rgba(103,232,249,0.6)]" />
+      <span class="absolute -bottom-10 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-cyan-300/15 px-3 py-1 font-mono text-xs text-cyan-200">✓ QR Code détecté</span>
+    </div>
+  </div>
+
   <!-- Maquette : éditeur de code -->
   <div v-else class="flex size-full items-center bg-gradient-to-br from-indigo-500/40 via-[#0e1030] to-black p-6" aria-hidden="true">
     <div class="w-full overflow-hidden rounded-2xl border border-white/10 bg-[#1e1e2e]/95 font-mono text-xs shadow-2xl sm:text-sm">
@@ -76,3 +110,23 @@ defineProps<{ visual: ProjectVisual }>()
     </div>
   </div>
 </template>
+
+<style scoped>
+.scan-laser {
+  animation: scan 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes scan {
+  to { transform: translateY(calc(10rem - 2px)); }
+}
+
+@media (min-width: 640px) {
+  @keyframes scan {
+    to { transform: translateY(calc(12rem - 2px)); }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scan-laser { animation: none; }
+}
+</style>

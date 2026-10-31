@@ -58,12 +58,12 @@ export const experience: Experience[] = [
 
 export const skills = [
   ['Vue', 'Nuxt', 'TypeScript', 'Tailwind', 'Nuxt UI', 'GSAP', 'React', 'Next.js'],
-  ['Node.js', 'Express', 'PHP', 'PostgreSQL', 'Drizzle', 'Docker', 'Git', 'Gestion de projet'],
+  ['Node.js', 'Express', 'PHP', 'PostgreSQL', 'Drizzle', 'Docker', 'Rust', 'Git', 'Gestion de projet'],
 ]
 
 export type ProjectVisual =
   | { kind: 'image', src: string, alt: string }
-  | { kind: 'chat' | 'terminal' | 'code' }
+  | { kind: 'chat' | 'terminal' | 'code' | 'scanner' }
 
 export interface Project {
   title: string
@@ -106,13 +106,11 @@ export const projects: Project[] = [
     visual: { kind: 'code' },
   },
   {
-    title: 'Surcharge Silencieuse',
-    category: 'Expérience interactive',
-    year: '2025',
-    description: "Une œuvre numérique sur la surproduction de données : l'écran se sature de blocs inutiles jusqu'à noyer l'essentiel.",
-    stack: ['Nuxt', 'Tailwind'],
-    github: 'https://github.com/RomainRodrigues/BigData',
-    url: 'https://bigdata.romrd.fr',
-    visual: { kind: 'image', src: '/projects/surcharge-silencieuse.webp', alt: "Capture de l'expérience : un écran saturé de blocs de données" },
+    title: 'Scanner',
+    category: 'Librairie Rust · en cours',
+    year: '2026',
+    description: 'Un moteur de lecture de QR codes et codes-barres en Rust, pensé pour le flux caméra en temps réel et utilisable depuis Node.js ou le navigateur via WebAssembly.',
+    stack: ['Rust', 'WebAssembly', 'napi-rs'],
+    visual: { kind: 'scanner' },
   },
 ]

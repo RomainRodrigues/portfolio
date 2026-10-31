@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import gsap from 'gsap'
-import { skillGroups } from '~/data/portfolio'
+const c = usePortfolio()
 
 const root = ref<HTMLElement | null>(null)
 
@@ -34,10 +34,10 @@ useScrollAnimation(root, ({ reduced }) => {
       class="absolute inset-0 flex flex-col justify-center gap-10 overflow-hidden bg-gradient-to-br from-[#0b1a33] via-[#1a0f2e] to-black"
     >
       <h2 data-panel-title class="px-6 text-center text-[clamp(2.5rem,7vw,6rem)] font-semibold tracking-tighter">
-        Ma <span class="text-gradient">boîte à outils</span>.
+        {{ c.skills.titleBefore }} <span class="text-gradient">{{ c.skills.titleHighlight }}</span>.
       </h2>
       <div class="flex flex-col gap-4">
-        <div v-for="group in skillGroups" :key="group.label" data-marquee class="flex w-max gap-4 whitespace-nowrap">
+        <div v-for="group in c.skills.groups" :key="group.label" data-marquee class="flex w-max gap-4 whitespace-nowrap">
           <span
             v-for="n in 3"
             :key="n"

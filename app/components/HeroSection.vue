@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import gsap from 'gsap'
 import { SplitText } from 'gsap/SplitText'
-import { profile } from '~/data/portfolio'
+const c = usePortfolio()
 
 const root = ref<HTMLElement | null>(null)
 const title = ref<HTMLElement | null>(null)
@@ -33,17 +33,17 @@ useScrollAnimation(root, ({ reduced }) => {
     />
     <div data-hero-content class="relative px-6 text-center will-change-transform">
       <p data-hero-fade class="mb-6 text-sm font-medium uppercase tracking-[0.3em] text-muted">
-        {{ profile.role }}
+        {{ c.hero.role }}
       </p>
       <h1 ref="title" class="text-[clamp(3.5rem,13vw,11rem)] font-semibold leading-[0.9] tracking-tighter">
-        {{ profile.firstName }}<br>{{ profile.lastName }}
+        {{ c.identity.firstName }}<br>{{ c.identity.lastName }}
       </h1>
       <p data-hero-fade class="mx-auto mt-8 max-w-xl text-lg text-ink/70 sm:text-xl">
-        {{ profile.tagline }}
+        {{ c.hero.tagline }}
       </p>
     </div>
     <div data-hero-fade data-hero-scroll class="absolute bottom-10 left-1/2 -translate-x-1/2 text-xs uppercase tracking-[0.3em] text-muted">
-      Scroll
+      {{ c.hero.scroll }}
     </div>
   </section>
 </template>

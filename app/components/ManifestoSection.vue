@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import gsap from 'gsap'
 import { SplitText } from 'gsap/SplitText'
-import { profile } from '~/data/portfolio'
+const c = usePortfolio()
 
 const root = ref<HTMLElement | null>(null)
 const text = ref<HTMLElement | null>(null)
@@ -23,9 +23,9 @@ useScrollAnimation(root, ({ reduced }) => {
 <template>
   <section id="about" ref="root" class="flex min-h-svh items-center">
     <div class="mx-auto max-w-5xl px-6">
-      <p class="mb-8 text-sm font-medium uppercase tracking-[0.3em] text-accent">À propos</p>
+      <p class="mb-8 text-sm font-medium uppercase tracking-[0.3em] text-accent">{{ c.about.label }}</p>
       <p ref="text" class="text-[clamp(2rem,5vw,4.25rem)] font-semibold leading-[1.1] tracking-tight">
-        {{ profile.manifesto }}
+        {{ c.about.text }}
       </p>
     </div>
   </section>

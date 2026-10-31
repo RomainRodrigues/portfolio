@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import gsap from 'gsap'
-import { profile, recapPdf } from '~/data/portfolio'
+const c = usePortfolio()
 
 const root = ref<HTMLElement | null>(null)
 
@@ -23,36 +23,36 @@ useScrollAnimation(root, ({ reduced }) => {
     <div class="pointer-events-none absolute bottom-0 left-1/2 h-[50vh] w-[80vw] -translate-x-1/2 translate-y-1/2 rounded-full bg-gradient-to-r from-accent/30 to-accent-2/30 blur-[120px]" />
 
     <h2 data-end-title class="text-gradient relative text-[clamp(6rem,22vw,18rem)] font-semibold leading-none tracking-tighter will-change-transform">
-      Fin.
+      {{ c.end.title }}
     </h2>
 
     <p data-end-fade class="relative mt-6 max-w-lg text-lg text-ink/70 sm:text-xl">
-      Merci d'avoir scrollé jusqu'ici. Tout ce que vous venez de voir tient sur une seule page.
+      {{ c.end.text }}
     </p>
 
     <!-- Le wrapper porte l'animation GSAP : le lien a sa propre transition CSS au survol -->
     <div data-end-fade class="relative mt-10">
       <a
-        :href="recapPdf"
+        :href="c.pdf"
         download
         class="inline-flex items-center gap-3 rounded-full bg-ink px-8 py-4 text-lg font-medium text-black transition-transform hover:scale-105"
       >
         <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14" />
         </svg>
-        Télécharger le récap (PDF)
+        {{ c.end.download }}
       </a>
     </div>
 
     <ul data-end-fade class="relative mt-10 flex flex-wrap justify-center gap-x-8 gap-y-2 text-sm text-ink/60">
-      <li><a :href="`mailto:${profile.email}`" class="transition-colors hover:text-ink">{{ profile.email }}</a></li>
-      <li v-for="social in profile.socials" :key="social.label">
+      <li><a :href="`mailto:${c.identity.email}`" class="transition-colors hover:text-ink">{{ c.identity.email }}</a></li>
+      <li v-for="social in c.identity.socials" :key="social.label">
         <a :href="social.href" target="_blank" rel="noopener" class="transition-colors hover:text-ink">{{ social.label }}</a>
       </li>
     </ul>
 
     <p class="absolute bottom-6 text-xs text-muted">
-      © {{ new Date().getFullYear() }} {{ profile.firstName }} {{ profile.lastName }}
+      © {{ new Date().getFullYear() }} {{ c.identity.firstName }} {{ c.identity.lastName }}
     </p>
   </section>
 </template>

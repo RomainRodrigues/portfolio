@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import gsap from 'gsap'
-import { experience } from '~/data/portfolio'
+const c = usePortfolio()
 
 const root = ref<HTMLElement | null>(null)
 
@@ -36,9 +36,9 @@ useScrollAnimation(root, ({ reduced }) => {
 <template>
   <section id="parcours" ref="root" class="mx-auto max-w-5xl px-6 py-40">
     <div data-timeline-title class="mb-24">
-      <p class="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-accent">Parcours</p>
+      <p class="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-accent">{{ c.journey.label }}</p>
       <h2 class="text-[clamp(2.5rem,6vw,5rem)] font-semibold leading-none tracking-tighter">
-        Formé à l'école.<br><span class="text-gradient">Forgé sur le terrain.</span>
+        {{ c.journey.titleLine1 }}<br><span class="text-gradient">{{ c.journey.titleLine2 }}</span>
       </h2>
     </div>
 
@@ -47,7 +47,7 @@ useScrollAnimation(root, ({ reduced }) => {
       <div class="absolute bottom-0 left-[7px] top-2 w-px bg-white/10" />
       <div data-line class="absolute bottom-0 left-[7px] top-2 w-px origin-top bg-gradient-to-b from-accent to-accent-2" />
 
-      <li v-for="item in experience" :key="item.title + item.period" data-step class="relative pb-20 pl-12 last:pb-0">
+      <li v-for="item in c.journey.items" :key="item.title + item.period" data-step class="relative pb-20 pl-12 last:pb-0">
         <span
           data-dot
           class="absolute left-0 top-2 size-[15px] rounded-full border-2 border-black"

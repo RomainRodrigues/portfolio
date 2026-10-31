@@ -1,4 +1,4 @@
-// Génère le PDF récapitulatif à partir de la page /recap du site statique.
+// Génère un PDF récapitulatif par langue à partir des pages /recap et /en/recap du site statique.
 // Usage : npm run pdf  (lance d'abord `nuxt generate`)
 import { createServer } from 'node:http'
 import { readFile, copyFile } from 'node:fs/promises'
@@ -6,7 +6,11 @@ import { extname, join, resolve } from 'node:path'
 import { chromium } from 'playwright'
 
 const root = resolve('.output/public')
-const output = resolve('public/romain-rodrigues-recap.pdf')
+// Une entrée par langue : page à imprimer → nom du fichier (voir recapPdfPath dans app/content/shared.ts)
+const targets = [
+  { page: '/recap/', file: 'romain-rodrigues-recap-fr.pdf' },
+  { page: '/en/recap/', file: 'romain-rodrigues-recap-en.pdf' },
+]
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.svg': 'image/svg+xml', '.webp': 'image/webp' }
 
 // Mini serveur statique pour .output/public
@@ -27,16 +31,19 @@ const { port } = server.address()
 const browser = await chromium.launch()
 try {
   const page = await browser.newPage()
-  await page.goto(`http://localhost:${port}/recap/`, { waitUntil: 'networkidle' })
-  // Sécurité : si le contenu dépasse une page A4, on le réduit pour qu'il tienne sur une seule.
-  const A4_HEIGHT = 1122 // 297 mm à 96 dpi
-  const height = await page.evaluate(() => document.querySelector('.recap').scrollHeight)
-  const scale = Math.min(1, A4_HEIGHT / height)
-  if (scale < 1) console.warn(`Contenu trop long : réduit à ${(scale * 100).toFixed(1)} %`)
-  await page.pdf({ path: output, format: 'A4', printBackground: true, scale, pageRanges: '1' })
-  // Copie aussi dans le build pour qu'il soit à jour sans regénérer le site.
-  await copyFile(output, join(root, 'romain-rodrigues-recap.pdf'))
-  console.log(`PDF généré : ${output}`)
+  for (const { page: path, file } of targets) {
+    const output = resolve('public', file)
+    await page.goto(`http://localhost:${port}${path}`, { waitUntil: 'networkidle' })
+    // Sécurité : si le contenu dépasse une page A4, on le réduit pour qu'il tienne sur une seule.
+    const A4_HEIGHT = 1123 // 297 mm à 96 dpi, arrondi au pixel supérieur
+    const height = await page.evaluate(() => document.querySelector('.recap').scrollHeight)
+    const scale = Math.min(1, A4_HEIGHT / height)
+    if (scale < 1) console.warn(`${file} : contenu trop long, réduit à ${(scale * 100).toFixed(1)} %`)
+    await page.pdf({ path: output, format: 'A4', printBackground: true, scale, pageRanges: '1' })
+    // Copie aussi dans le build pour qu'il soit à jour sans regénérer le site.
+    await copyFile(output, join(root, file))
+    console.log(`PDF généré : public/${file}`)
+  }
 }
 finally {
   await browser.close()

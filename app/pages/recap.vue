@@ -1,26 +1,26 @@
 <script setup lang="ts">
-import { experience, process, profile, projects, skillGroups } from '~/data/portfolio'
-
 // Page imprimable (format A4) : c'est elle qui sert à générer le PDF (`npm run pdf`).
+const c = usePortfolio()
+
 useHead({
-  title: `${profile.firstName} ${profile.lastName} — Récapitulatif`,
+  title: () => `${c.value.identity.firstName} ${c.value.identity.lastName} — ${c.value.recap.pageTitle}`,
   htmlAttrs: { class: 'print-page' },
   meta: [{ name: 'robots', content: 'noindex' }],
 })
 
-const contacts = [
-  { label: profile.email, href: `mailto:${profile.email}` },
-  ...profile.socials.map(s => ({ label: s.href.replace(/^https?:\/\/(www\.)?/, ''), href: s.href })),
-]
+const contacts = computed(() => [
+  { label: c.value.identity.email, href: `mailto:${c.value.identity.email}` },
+  ...c.value.identity.socials.map(s => ({ label: s.href.replace(/^https?:\/\/(www\.)?/, ''), href: s.href })),
+])
 </script>
 
 <template>
   <article class="recap mx-auto bg-white text-[#1d1d1f]">
     <header class="flex items-end justify-between gap-8 border-b border-black/10 pb-5">
       <div>
-        <p class="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#2997ff]">{{ profile.role }}</p>
-        <h1 class="mt-1 text-3xl font-semibold tracking-tight">{{ profile.firstName }} {{ profile.lastName }}</h1>
-        <p class="mt-2 max-w-md text-sm text-black/60">{{ profile.tagline }}</p>
+        <p class="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#2997ff]">{{ c.hero.role }}</p>
+        <h1 class="mt-1 text-3xl font-semibold tracking-tight">{{ c.identity.firstName }} {{ c.identity.lastName }}</h1>
+        <p class="mt-2 max-w-md text-sm text-black/60">{{ c.hero.tagline }}</p>
       </div>
       <ul class="shrink-0 space-y-1 text-right text-xs text-black/70">
         <li v-for="c in contacts" :key="c.href"><a :href="c.href">{{ c.label }}</a></li>
@@ -30,14 +30,14 @@ const contacts = [
     <div class="mt-5 grid grid-cols-[1fr_14rem] gap-9">
       <div class="space-y-5">
         <section>
-          <h2 class="recap-title">Profil</h2>
-          <p class="text-[13px] leading-relaxed text-black/75">{{ profile.manifesto }}</p>
+          <h2 class="recap-title">{{ c.recap.profile }}</h2>
+          <p class="text-[13px] leading-relaxed text-black/75">{{ c.about.text }}</p>
         </section>
 
         <section>
-          <h2 class="recap-title">Parcours</h2>
+          <h2 class="recap-title">{{ c.recap.journey }}</h2>
           <ol class="space-y-2 border-l border-black/10 pl-4">
-            <li v-for="item in experience" :key="item.title + item.period" class="relative">
+            <li v-for="item in c.journey.items" :key="item.title + item.period" class="relative">
               <span class="absolute -left-[21px] top-1.5 size-2 rounded-full" :class="item.current ? 'bg-[#bf5af2]' : 'bg-[#2997ff]'" />
               <p class="text-[11px] text-black/50">{{ item.period }} · {{ item.place }}</p>
               <p class="text-sm font-semibold">{{ item.title }}</p>
@@ -47,9 +47,9 @@ const contacts = [
         </section>
 
         <section>
-          <h2 class="recap-title">Projets</h2>
+          <h2 class="recap-title">{{ c.recap.projects }}</h2>
           <ul class="space-y-2">
-            <li v-for="project in projects" :key="project.title">
+            <li v-for="project in c.projectList" :key="project.id">
               <p class="text-sm font-semibold">
                 {{ project.title }}
                 <span class="font-normal text-black/50">· {{ project.category }} · {{ project.year }}</span>
@@ -66,8 +66,8 @@ const contacts = [
 
       <aside class="space-y-5">
         <section>
-          <h2 class="recap-title">Compétences</h2>
-          <div v-for="group in skillGroups" :key="group.label" class="mb-4">
+          <h2 class="recap-title">{{ c.recap.skills }}</h2>
+          <div v-for="group in c.skills.groups" :key="group.label" class="mb-4">
             <p class="mb-1.5 text-[11px] font-medium text-black/50">{{ group.label }}</p>
             <ul class="flex flex-wrap gap-1.5">
               <li v-for="skill in group.items" :key="skill" class="rounded-full bg-black/5 px-2.5 py-1 text-[11px]">{{ skill }}</li>
@@ -76,9 +76,9 @@ const contacts = [
         </section>
 
         <section>
-          <h2 class="recap-title">Façon de travailler</h2>
+          <h2 class="recap-title">{{ c.recap.process }}</h2>
           <ul class="space-y-2.5">
-            <li v-for="step in process" :key="step.title">
+            <li v-for="step in c.process" :key="step.title">
               <p class="text-sm font-semibold">{{ step.title }}</p>
               <p class="text-xs leading-relaxed text-black/65">{{ step.text }}</p>
             </li>

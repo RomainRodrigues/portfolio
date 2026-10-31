@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ProjectVisual } from '~/data/portfolio'
+import type { ProjectVisual } from '~/content/shared'
 
 defineProps<{ visual: ProjectVisual }>()
 

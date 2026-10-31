@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import gsap from 'gsap'
-import { process } from '~/data/portfolio'
+const c = usePortfolio()
 
 /*
  * Équivalent « sans assets » des séquences d'images d'Apple : un nuage de particules
@@ -147,7 +147,7 @@ useScrollAnimation(root, ({ reduced }) => {
       :class="reducedMotion ? 'flex flex-col items-center gap-6 sm:flex-row sm:justify-center' : ''"
     >
       <div
-        v-for="step in process"
+        v-for="step in c.process"
         :key="step.title"
         data-caption
         class="mx-auto max-w-md text-center"

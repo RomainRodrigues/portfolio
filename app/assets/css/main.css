@@ -1,0 +1,39 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", Roboto, sans-serif;
+  --color-ink: #f5f5f7;
+  --color-muted: #86868b;
+  --color-accent: #2997ff;
+  --color-accent-2: #bf5af2;
+}
+
+html {
+  background: #000;
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Sans animations : le contenu reste lisible et la galerie défile au doigt/à la souris */
+@media (prefers-reduced-motion: reduce) {
+  .projects-viewport {
+    overflow-x: auto;
+  }
+}
